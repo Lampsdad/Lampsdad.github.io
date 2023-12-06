@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: components/ProtectedRoute.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,33 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: components/ProtectedRoute.js</h1>
 
     
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Navigate } from "react-router-dom";
+import { useAuth } from "../helpers/AuthContext";
+/**
+ * ProtectedRoute component to handle protected routes based on user authentication status.
+ * @param {Object} children - The components or routes to be rendered within the protected route.
+ * @returns {JSX.Element} JSX for rendering children if the user is authenticated; otherwise, redirects to the home page.
+ */
+const ProtectedRoute = ({ children }) => {
+    const {user} = useAuth();
     
-
-
-
-
-
+  if (!user) {
+    return &lt;Navigate to="/" replace />;
+  }
+  return children;
+};
+export default ProtectedRoute;</code></pre>
+        </article>
+    </section>
 
 
 

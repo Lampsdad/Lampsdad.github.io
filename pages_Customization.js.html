@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Customization.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Customization.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React , { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { useCart } from '../helpers/CartContext';
+
+import '../styles/Customization.css';
+import none from '../assets/Toppings/none.png';
+import Pearl from '../assets/Toppings/pearl.png';
+import Aiyu from '../assets/Toppings/aiyuJelly.png';
+import Basil from '../assets/Toppings/basilSeeds.png';
+import Coconut from '../assets/Toppings/coconutJelly.png';
+import Herbal from '../assets/Toppings/herbalJelly.png';
+import MilkFoam from '../assets/Toppings/milkFoam.png';
+import Oreo from '../assets/Toppings/oreoCrumbs.png';
+import Pudding from '../assets/Toppings/pudding.png';
+import WhitePearl from '../assets/Toppings/whitePearl.png';
+
+/**
+ * Customization component to modify drink options before adding to cart.
+ * @returns {JSX.Element} Customization component JSX
+ */
+function Customization() {
+  const { addToCart } = useCart();
+  const {state} = useLocation();
+
+  const [size, setSize] = useState("Medium");
+  const [temp, setTemp] = useState("Cold");
+  const [toppingOne, setToppingOne] = useState("0");
+  const [toppingTwo, setToppingTwo] = useState("0");
+  const [sugar, setSugar] = useState("50");
+  const [ice, setIce] = useState("Regular");
+  const [price, setPrice] = useState(state.price);
+
+
+
+  useEffect(() => {
+    // Update price based on size
+    let newPrice = state.price;
+    if (size === "Large") {
+      newPrice += 0.75
+    } 
+    else if (size === "Medium" &amp;&amp; newPrice > state.price){
+      newPrice -= 0.75;
+    }
+
+    if (toppingOne !== "0"){
+      newPrice += 0.75;
+    }
+    if (toppingTwo !== "0"){
+      newPrice += 0.75;
+    }
+
+    setPrice(newPrice);
+  }, [size, state.price, toppingOne, toppingTwo]);
+
+  // Define a function to get the image source based on the selected topping
+  const getToppingImageSrc = () => {
+    switch (toppingOne) {
+      case "0":
+        return none;
+      case "11":
+        return Pearl;
+      case "14":
+        return WhitePearl;
+      case "15":
+        return Coconut;
+      case "10":
+        return MilkFoam;
+      case "18":
+        return Aiyu 
+      case "20":
+        return Oreo;
+      case "17":
+        return Herbal;
+      case "19":
+        return Basil;
+    case "16":
+        return Pudding;
+      default:
+        return null; // Return null if topping is "None" or not recognized
+    }
+  };
+
+  const getToppingTwoImageSrc = () => {
+    switch (toppingTwo) {
+      case "0":
+        return none;
+      case "11":
+        return Pearl;
+      case "14":
+        return WhitePearl;
+      case "15":
+        return Coconut;
+      case "10":
+        return MilkFoam;
+      case "18":
+        return Aiyu 
+      case "20":
+        return Oreo;
+      case "17":
+        return Herbal;
+      case "19":
+        return Basil;
+    case "16":
+        return Pudding;
+      default:
+        return null; // Return null if topping is "None" or not recognized
+    }
+  };
+
+  return (
+    &lt;div className="menu">
+      &lt;div className="menuTitle">{state.name}&lt;/div>
+      &lt;div className="customizationMenu">
+        &lt;div className="drinkSize">
+          &lt;p>Size&lt;/p>
+          &lt;select className='dropdown' value={size} onChange={e => setSize(e.target.value)}>
+            &lt;option value="Medium">Medium&lt;/option>
+            &lt;option value="Large">Large&lt;/option>
+          &lt;/select>
+        &lt;/div>
+        &lt;div className="drinkTemperature">
+          &lt;p>Temperature&lt;/p>
+          &lt;select className='dropdown' value={temp} onChange={e => setTemp(e.target.value)}>
+            &lt;option value="Cold">Cold&lt;/option>
+            &lt;option value="Hot">Hot&lt;/option>
+          &lt;/select>
+        &lt;/div>
+        &lt;div className="drinkToppings">
+          &lt;p>Topping 1&lt;/p>
+          &lt;select className='dropdown' value={toppingOne} onChange={e => setToppingOne(e.target.value)}>
+            &lt;option value="0">None&lt;/option>
+            &lt;option value="11">Pearl&lt;/option>
+            &lt;option value="14">White Pearl&lt;/option>
+            &lt;option value="15">Coconut Jelly&lt;/option>
+            &lt;option value="16">Pudding&lt;/option>
+            &lt;option value="17">Herbal Jelly&lt;/option>
+            &lt;option value="18">Aiyu Jelly&lt;/option>
+            &lt;option value="19">Basil Seeds&lt;/option>
+            &lt;option value="20">Oreo Crumbs&lt;/option>
+            &lt;option value="10">Milk Foam&lt;/option>
+          &lt;/select>
+          {toppingOne !== "None" &amp;&amp; (
+            &lt;img src={getToppingImageSrc()} alt={toppingOne} className="toppingImage" />
+          )}
+        &lt;/div>
+        &lt;div className="drinkToppings">
+          &lt;p>Topping 2&lt;/p>
+          &lt;select className='dropdown' value={toppingTwo} onChange={e => setToppingTwo(e.target.value)}>
+          &lt;option value="0">None&lt;/option>
+            &lt;option value="11">Pearl&lt;/option>
+            &lt;option value="14">White Pearl&lt;/option>
+            &lt;option value="15">Coconut Jelly&lt;/option>
+            &lt;option value="16">Pudding&lt;/option>
+            &lt;option value="17">Herbal Jelly&lt;/option>
+            &lt;option value="18">Aiyu Jelly&lt;/option>
+            &lt;option value="19">Basil Seeds&lt;/option>
+            &lt;option value="20">Oreo Crumbs&lt;/option>
+            &lt;option value="10">Milk Foam&lt;/option>
+          &lt;/select>
+          {toppingTwo !== "None" &amp;&amp; (
+            &lt;img src={getToppingTwoImageSrc()} alt={toppingTwo} className="toppingImage" />
+          )}
+        &lt;/div>
+        &lt;div className="drinkSugar">
+          &lt;p>Sugar&lt;/p>
+          &lt;select className='dropdown' value={sugar} onChange={e => setSugar(e.target.value)}>
+            &lt;option value="0">0&lt;/option>
+            &lt;option value="30">30&lt;/option>
+            &lt;option value="50">50&lt;/option>
+            &lt;option value="70">70&lt;/option>
+            &lt;option value="100">100&lt;/option>
+          &lt;/select>
+        &lt;/div>
+        &lt;div className="drinkIce">
+          &lt;p>Ice&lt;/p>
+          &lt;select className='dropdown' value={ice} onChange={e => setIce(e.target.value)}>
+            &lt;option value="None">None&lt;/option>
+            &lt;option value="Light">Light&lt;/option>
+            &lt;option value="Regular">Regular&lt;/option>
+          &lt;/select>
+        &lt;/div>
+      &lt;/div>
+      &lt;div className="confirmOrder">
+        &lt;div className="priceState">${price.toFixed(2)}&lt;/div>
+          &lt;button
+            className='confirm'
+            onClick={() => addToCart({ size, temp, toppingOne, toppingTwo, ice, sugar, name: state.name, price, id: state.id })}
+          >
+            Add to Cart
+          &lt;/button>
+      &lt;/div>    
+    &lt;/div>
+
+  )
+}
+
+export default Customization</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

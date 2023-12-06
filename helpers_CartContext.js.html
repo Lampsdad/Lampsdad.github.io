@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: helpers/CartContext.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,84 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: helpers/CartContext.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { createContext, useContext, useState } from 'react';
 
+/**
+ * Context to manage the shopping cart state and actions.
+ * @type {React.Context}
+ */
+const CartContext = createContext();
 
-    <h3> </h3>
+/**
+ * Provider component to manage the shopping cart state and actions.
+ * @param {Object} props - React component props.
+ * @returns {JSX.Element} JSX for the shopping cart provider component.
+ */
+export function CartProvider({ children }) {
+  /**
+   * State variable to hold the items in the cart.
+   * @type {Array}
+   */
+  const [cart, setCart] = useState([]);
 
+  /**
+   * Function to add an item to the cart.
+   * @param {Object} item - Item to be added to the cart.
+   * @returns {void}
+   */
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
 
+  /**
+   * Function to clear the entire cart.
+   * @returns {void}
+   */
+  const clearCart = () => {
+    setCart([]);
+  };
 
+  /**
+   * Function to remove an item from the cart by index.
+   * @param {number} index - Index of the item to be removed.
+   * @returns {void}
+   */
+  const removeFromCart = (index) => {
+    const newCart = [...cart];
+    newCart.splice(index, 1);
+    setCart(newCart);
+  };
 
+  /**
+   * Provide the cart context and its value to child components.
+   * @returns {JSX.Element} JSX for the cart context provider.
+   */
+  return (
+    &lt;CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+      {children}
+    &lt;/CartContext.Provider>
+  );
+}
 
-
-
-
-
-
-    
-
-
-
-
-
+/**
+ * Hook to access shopping cart context values.
+ * @returns {Object} Shopping cart context values (cart, addToCart, removeFromCart, clearCart).
+ */
+export function useCart() {
+  return useContext(CartContext);
+}
+</code></pre>
+        </article>
+    </section>
 
 
 

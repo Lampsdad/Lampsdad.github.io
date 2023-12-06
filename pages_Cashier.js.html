@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Cashier.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Cashier.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState, useEffect} from 'react';
+import { MilkFoamList } from '../helpers/MenuList';
+import { MilkTeaList } from '../helpers/MenuList';
+import { SlushList } from '../helpers/MenuList';
+import { CoffeeList } from '../helpers/MenuList';
+import { TeaList } from '../helpers/MenuList';
+import { CreativeList } from '../helpers/MenuList';
+import MenuItem from '../components/CashierItem';
+
+
+import '../styles/Cashier.css';
+
+/**
+ * Cashier component responsible for displaying various menu categories.
+ * @returns {JSX.Element} Cashier component JSX
+ */
+function Cashier() {
+  const [toggle, setToggle] = useState(1);
+
+  const [SeasonalList, setSeasonalList] = useState([]);
+
+    useEffect(() => {
+        async function sendRequest(){
+            try{
+                const body = {"query": "select * from menu_item where id > 54;"}
+                const response = await fetch("/query", {
+                  method: "POST",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify(body)
+                });
+                const jsonData = await response.json();
+                setSeasonalList(jsonData);
+              }
+              catch (err){
+                console.error(err.message);
+              }
+        } 
+        sendRequest();
+    }, []);
+
+   /**
+   * Updates the current category to be displayed.
+   * @param {number} id - Category ID
+   */
+  function updateToggle(id) {
+    setToggle(id);
+  }
+
+  return (
+        &lt;div className="menu">
+            &lt;h1 className="menuTitle">Order Menu&lt;/h1>
+            &lt;div className="container">
+                &lt;ul className="cc-flex">
+                &lt;li className="ctab" onClick={()=>updateToggle(1)}>Milk Foam&lt;/li>
+                &lt;li className="ctab" onClick={()=>updateToggle(2)}>Milk Tea&lt;/li>
+                &lt;li className="ctab" onClick={()=>updateToggle(3)}>Slush&lt;/li>
+                &lt;li className="ctab" onClick={()=>updateToggle(4)}>Coffee&lt;/li>
+                &lt;li className="ctab" onClick={()=>updateToggle(5)}>Tea&lt;/li>
+                &lt;li className="ctab" onClick={()=>updateToggle(6)}>Creative&lt;/li>
+                &lt;li className="ctab" onClick={()=>updateToggle(7)}>Seasonal&lt;/li>
+                &lt;/ul>
+                &lt;div className={toggle === 1 ? "menuList" : "hide-menuList"}>
+                    {MilkFoamList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+                &lt;div className={toggle === 2 ? "menuList" : "hide-menuList"}>
+                    {MilkTeaList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+                &lt;div className={toggle === 3 ? "menuList" : "hide-menuList"}>
+                    {SlushList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+                &lt;div className={toggle === 4 ? "menuList" : "hide-menuList"}>
+                    {CoffeeList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+                &lt;div className={toggle === 5 ? "menuList" : "hide-menuList"}>
+                    {TeaList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+                &lt;div className={toggle === 6 ? "menuList" : "hide-menuList"}>
+                    {CreativeList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+                &lt;div className={toggle === 7 ? "menuList" : "hide-menuList"}>
+                    {SeasonalList.map((menuItem, key) => {
+                        return &lt;MenuItem key={key} name={menuItem.name} price={menuItem.price} id={menuItem.id} />;
+                    })}
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+  )
+}
+
+export default Cashier</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

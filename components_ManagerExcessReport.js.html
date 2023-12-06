@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ManagerExcessReport.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ManagerExcessReport.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+
+/**
+ * Functional component for generating an excess report by date.
+ * @returns {JSX.Element} JSX for the ManagerExcessReport component.
+ */
+function ManagerExcessReport(){
+
+    const [excessData, setExcessData] = useState([]);
+
+    const [startDate, setStartDate] = useState(new Date());
+
+
+    /**
+   * Function to send a request for generating the excess report based on selected date.
+   * @param {Event} e - The click event triggering the report generation.
+   */
+    const sendRequest = async e =>{
+        try{
+            //month indexes from 0, need to add 1
+            const startMonth = startDate.getMonth() + 1;
+
+            const body = {"query":  "WITH RestockTotalQuantity AS (SELECT r.ID AS order_id, UNNEST(r.ingredients) AS item_id, UNNEST(r.quantities) AS quantity FROM restock_order r WHERE r.date >= '" + startMonth + "-" + startDate.getDate() +
+            "-" + startDate.getFullYear() + "'::date AND r.date &lt;= CURRENT_DATE)  SELECT ii.ID, ii.name, SUM(rtq.quantity) AS total_quantity FROM inventory_item ii JOIN RestockTotalQuantity rtq ON ii.ID = rtq.item_id GROUP BY ii.ID, ii.name HAVING SUM(rtq.quantity) &lt; 500;"}
+            const response = await fetch("/query", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            setExcessData(jsonData);
+            }
+            catch (err){
+            console.error(err.message);
+            }
+    } 
+
+
+
+return (
+    &lt;div className = "ManagerSalesReport">
+        &lt;div className="StartDatePicker">
+            &lt;h4>Start Date&lt;/h4>
+             &lt;DatePicker className="customDatepicker" selected={startDate} onChange={(date) => setStartDate(date)} />
+        &lt;/div>
+
+        &lt;button className="customButton" type="button" onClick={sendRequest}>Generate Report&lt;/button>
+        {excessData.length > 0 &amp;&amp; (
+            &lt;table>
+                &lt;thead>
+                    &lt;tr>
+                        &lt;th>ID&lt;/th>
+                        &lt;th>Name&lt;/th>
+                        &lt;th>Quantity&lt;/th>
+                    &lt;/tr>
+                &lt;/thead>
+                &lt;tbody>
+                    {excessData.map(data => (
+                        &lt;tr key={data.id}>
+                            &lt;td>{data.id}&lt;/td>
+                            &lt;td>{data.name}&lt;/td>
+                            &lt;td>{data.total_quantity}&lt;/td>
+                        &lt;/tr>
+                    ))}
+                &lt;/tbody>
+            &lt;/table>
+        )}
+    &lt;/div>
+    
+)
+
+}  
+
+export default ManagerExcessReport;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: components/Navbar.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,59 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: components/Navbar.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
+import ReorderIcon from '@mui/icons-material/Reorder';
+import Logo from '../assets/logo.png';
+import '../styles/Navbar.css';
+import { GoogleLogin, googleLogout, useGoogleLogin } from '@react-oauth/google'
+import axios from 'axios';
+import Login from './Login';
 
+/**
+ * Navbar component containing navigation links and a login section.
+ * @returns {JSX.Element} JSX for the Navbar component.
+ */
+function Navbar() {
 
-    <h3> </h3>
+   const [openLinks, setOpenLinks] = useState(false);
 
+   return (
+    &lt;nav className="navbar">
+        &lt;div className="leftSide" id={openLinks ? "open" : "close"}>
+            &lt;Link to="/home" aria-label="Gong Cha Home Page"> &lt;img alt="Gong Cha Logo" src={Logo} /> &lt;/Link>
+            &lt;div className="hiddenLinks">
+                &lt;Link to="/home" aria-label="Gong Cha Home Page"> Home &lt;/Link>
+                &lt;Link to="/menu"> Menu &lt;/Link>
+                &lt;Link to="/manager"> Manager &lt;/Link>
+                &lt;Link to="/Checkout"> Checkout &lt;/Link>
+            &lt;/div>
+        &lt;/div>
+        &lt;div className="rightSide">
+            &lt;Link to="/home" aria-label="Gong Cha Home Page"> Home &lt;/Link>
+            &lt;Link to="/menu"> Menu &lt;/Link>
+            &lt;Link to="/checkout"> Checkout &lt;/Link>
+            &lt;Link to="/guide"> Guide &lt;/Link>
+            &lt;Link to="/cashier">Cashier &lt;/Link>
+            &lt;Link to="/manager"> Manager &lt;/Link>
+        &lt;/div>
+        &lt;Login/>
+    &lt;/nav>
+  )
+}
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default Navbar</code></pre>
+        </article>
+    </section>
 
 
 

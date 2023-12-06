@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Checkout.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Checkout.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react';
+import { useLocation } from 'react-router-dom';
+import { useCart } from '../helpers/CartContext';
+import { Toaster, toast } from 'react-hot-toast';
+
+import '../styles/Checkout.css';
+
+/**
+ * Checkout component for displaying and confirming the user's order.
+ * @returns {JSX.Element} Checkout component JSX
+ */
+function Checkout() {
+  const { cart, removeFromCart, clearCart } = useCart();
+  
+  const {state} = useLocation();
+  const [toggle, setToggle] = useState(1);
+  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+
+  /**
+   * Updates the current category to be displayed.
+   * @param {number} id - Category ID
+   */
+  function updateToggle(id) {
+    setToggle(id);
+  }
+
+  /**
+   * Sends the order request to the server.
+   * @param {Event} e - Event object
+   */
+  const sendRequest = async e =>{
+
+    try{
+      let ingredArr = [];
+      let orderArr = [];
+      let priceSum = 0.0;
+      for (let i = 0; i &lt; cart.length; i++) 
+      {
+        const ingredBody = {"query": "SELECT ingredients FROM menu_item WHERE id = " + cart[i].id + ";"}
+        const ingredRes = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(ingredBody)
+        });
+        let t = await ingredRes.json();
+        for(let j=0;j&lt;t[0].ingredients.length;j++)
+        {
+          ingredArr.push(t[0].ingredients[j]);
+        }
+
+        var toppingListStr;
+
+        if(cart[i].toppingOne == "0" &amp;&amp; cart[i].toppingTwo == "0")
+        {
+          toppingListStr = "'{}'";
+        }
+        else if(cart[i].toppingOne != "0" &amp;&amp; cart[i].toppingTwo == "0")
+        {
+          toppingListStr = "'{"+cart[i].toppingOne+"}'";
+          ingredArr.push(cart[i].toppingOne);
+        }
+        else if(cart[i].toppingOne == "0" &amp;&amp; cart[i].toppingTwo != "0")
+        {
+          toppingListStr = "'{"+cart[i].toppingTwo+"}'";
+          ingredArr.push(cart[i].toppingTwo);
+        }
+        else if(cart[i].toppingOne != "0" &amp;&amp; cart[i].toppingTwo != "0")
+        {
+          toppingListStr = "'{"+cart[i].toppingOne+", "+ cart[i].toppingTwo +"}'";
+          ingredArr.push(cart[i].toppingOne);
+          ingredArr.push(cart[i].toppingTwo);
+        }
+        
+
+        var isHot = false;
+        if(cart[i].temp == "Hot")
+        {
+          isHot = true;
+        }
+        else if(cart[i].temp == "Cold")
+        {
+          isHot = false;
+        }
+
+        const body = {"query": "INSERT INTO customization (toppings, ice_level, sugar_level, hot, size, price) VALUES ("+toppingListStr+", '"+cart[i].ice+"', " +cart[i].sugar+", " + isHot + ", '"+cart[i].size+"', " + cart[i].price + ");"}
+        const response = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+
+        //we need to get the mac customization id
+        var maxCustId = null;
+        const maxCustIDBody = {"query": "SELECT MAX(id) FROM customization;"}
+        const maxCustResponse = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(maxCustIDBody)
+        });
+        var temp = await maxCustResponse.json();
+        maxCustId = temp[0].max;
+
+        //now we need to make the order_item
+
+        const orderItemBody = {"query": "INSERT INTO order_item (menu_item_id, customization_id, price) VALUES ("+cart[i].id+", "+maxCustId+", " +cart[i].price+");"}
+
+        const orderItemRes = await fetch("/query", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(orderItemBody)
+          });
+
+          priceSum += cart[i].price;
+ 
+
+        //we need to get the max order_item id
+        var maxOrderId = null;
+        const maxOrderIDBody = {"query": "SELECT MAX(id) FROM order_item;"}
+        const maxOrderResponse = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(maxOrderIDBody)
+        });
+        var temp = await maxOrderResponse.json();
+        maxOrderId = temp[0].max;
+        orderArr.push(maxOrderId);
+      }//end of cart loop
+      //now remove ingredients from inventory
+
+
+
+      let orderItemStr = "'{";
+      for(let i=0; i &lt; orderArr.length-1; i++)
+      {
+        orderItemStr += orderArr[i] + ", ";
+      }
+      orderItemStr += orderArr[orderArr.length-1];
+      orderItemStr += "}'";
+      
+      const currentDate = new Date();
+
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month as it's zero-based
+      const day = String(currentDate.getDate()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const saleBody = {"query": "insert into sale (date, items, price) values ('"+formattedDate+"', "+orderItemStr+", "+priceSum+");"}
+
+      const saleResponse = await fetch("/query", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(saleBody)
+      });
+
+      clearCart();
+
+      toast.success("Order Confirmed!");
+
+
+      //remove ingredients from inventory
+      //I do this after the order confirmation so that things arent slowed down too much
+      for(let j = 0; j &lt; ingredArr.length;j++)
+      {
+        const decresaseInventoryBody = {"query": "UPDATE inventory_item SET quantity = quantity - 1 WHERE id = "+ ingredArr[j] + ";"}
+        const decresaseInventoryRes = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(decresaseInventoryBody)
+        });
+      }
+  }
+  catch(err){
+      console.error(err.message);
+      toast.error("Order Failed.");
+  }
+
+} 
+
+  return (
+    &lt;div className="checkout">
+        &lt;h1 className="checkoutTitle">Checkout&lt;/h1>
+        &lt;div className="drinksBox">
+            {cart.map((item, index) => (
+                &lt;div key={index} className="orderItems">{item.name}, {item.size}, {item.temp} - ${item.price.toFixed(2)}
+                  &lt;button  className="orderItemsButton" onClick={() => removeFromCart(index)}>&lt;h1>Remove&lt;/h1>&lt;/button>
+                &lt;/div>
+            ))}
+        &lt;/div>
+        &lt;div>
+          &lt;h1>Total Price: ${totalPrice.toFixed(2)}&lt;/h1>
+        &lt;/div>
+        &lt;div className="checkoutButton" onClick={sendRequest}>
+          &lt;h1>Confirm Order&lt;/h1>
+          &lt;Toaster/>
+        &lt;/div>
+    &lt;/div>
+  )
+}
+
+export default Checkout</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

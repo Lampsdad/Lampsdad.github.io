@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ManagerPairReport.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ManagerPairReport.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import DynamicMenuList from "../helpers/DynamicMenuList";
+
+
+/**
+ * Functional component for generating a pair report based on sales within a specific date range.
+ * @returns {JSX.Element} JSX for the ManagerPairReport component.
+ */
+function ManagerPairReport(){
+
+    const [pairData, setPairData] = useState([]);
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+
+
+    const menuList = DynamicMenuList();
+
+    /**
+   * Function to send a request for generating the pair report within the selected date range.
+   * @param {Event} e - The click event triggering the report generation.
+   */
+    const sendRequest = async e =>{
+        try{
+            //month indexes from 0, need to add 1
+            const startMonth = startDate.getMonth() + 1;
+            const endMonth = endDate.getMonth() + 1;
+
+            const body = {"query": "WITH item_pairs AS (SELECT m1.ID AS item1_id, m1.name AS item1_name, m2.ID AS item2_id, m2.name AS item2_name, COUNT(*) AS frequency FROM sale s JOIN order_item oi1 ON oi1.ID = ANY(s.items) JOIN menu_item m1 ON oi1.menu_item_id = m1.ID JOIN order_item oi2 ON oi2.ID = ANY(s.items) JOIN menu_item m2 ON oi2.menu_item_id = m2.ID WHERE s.Date >= '"+ startMonth + "-" + startDate.getDate() +
+            "-" + startDate.getFullYear() +"' AND s.Date &lt;= '" + endMonth + "-" + 
+            endDate.getDate() + "-" + endDate.getFullYear()+ "'AND m1.ID &lt; m2.ID GROUP BY m1.ID, m1.name, m2.ID, m2.name), sorted_item_pairs AS (SELECT item1_id, item1_name, item2_id, item2_name, frequency, ROW_NUMBER() OVER (ORDER BY frequency DESC) AS rank FROM item_pairs) SELECT item1_id, item1_name, item2_id, item2_name, frequency FROM sorted_item_pairs ORDER BY rank;"}
+             
+            const response = await fetch("/query", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            setPairData(jsonData);
+            }
+            catch (err){
+            console.error(err.message);
+            }
+    } 
+
+
+
+return (
+    &lt;div className = "ManagerSalesReport">
+        &lt;div className="StartDatePicker">
+            &lt;h4>Start Date&lt;/h4>
+             &lt;DatePicker className="customDatepicker" selected={startDate} onChange={(date) => setStartDate(date)} />
+        &lt;/div>
+
+        &lt;div className="EndDatePicker">
+             &lt;h4>End Date&lt;/h4>
+             &lt;DatePicker className="customDatepicker" selected={endDate} onChange={(date) => setEndDate(date)} />
+        &lt;/div>
+        &lt;button className="customButton" type="button" onClick={sendRequest}>Generate Report&lt;/button>
+        {pairData.length > 0 &amp;&amp; (
+            &lt;table>
+                &lt;thead>
+                    &lt;tr>
+                        &lt;th>ID&lt;/th>
+                        &lt;th>Name&lt;/th>
+                        &lt;th>ID&lt;/th>
+                        &lt;th>Name&lt;/th>
+                        &lt;th>Frequency&lt;/th>
+                    &lt;/tr>
+                &lt;/thead>
+                &lt;tbody>
+                    {pairData.map(data => (
+                        &lt;tr key={data.id}>
+                            &lt;td>{data.item1_id + " | "}&lt;/td>
+                            &lt;td>{data.item1_name}&lt;/td>
+                            &lt;td>{data.item2_id + " | "}&lt;/td>
+                            &lt;td>{data.item2_name}&lt;/td>
+                            &lt;td>{data.frequency}&lt;/td>
+                        &lt;/tr>
+                    ))}
+                &lt;/tbody>
+            &lt;/table>
+        )}
+    &lt;/div>
+    
+)
+
+}  
+
+export default ManagerPairReport;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

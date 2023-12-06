@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: helpers/MenuList.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: helpers/MenuList.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import MilkFoamGreen from "../assets/MilkFoam/GreenMilkTea.png";
+import MilkFoamBlack from "../assets/MilkFoam/BlackMilkTea.png";
+import MilkFoamOolong from "../assets/MilkFoam/MilkOolongTea.png";
+import MilkFoamEarlGrey from "../assets/MilkFoam/MilkFoamEarlGreyTea.png";
+import MilkFoamWinterMelon from "../assets/MilkFoam/MilkFoamWintermelon.png";
+import MilkFoamDirtyBrown from "../assets/MilkFoam/DirtyBrownSugarMilk.png";
+import MilkFoamCremeBruleeBrown from "../assets/MilkFoam/CremeBruleeBrownSugarMilkTea.png";
+import MilkFoamCremeBruleeStrawberry from "../assets/MilkFoam/CremeBruleeStrawberryLatte.png";
+
+import MilkTea from "../assets/MilkTea/MilkTea.png";
+import MilkTeaPearl from "../assets/MilkTea/PearlMilkTea.png";
+import MilkTeaCaramel from "../assets/MilkTea/CaramelMilkTea.png";
+import MilkTeaBrownSugar from "../assets/MilkTea/BrownSugarMilkTea.png";
+import MilkTeaWintermelon from "../assets/MilkTea/WinterMelonMilkTea.png";
+import MilkTeaStrawberry from "../assets/MilkTea/StrawberryMilkTea.png";
+
+import SlushPassionfruitandPeach from "../assets/Slush/PassionfruitAndPeachYogurtSlush.png";
+import SlushLychee from "../assets/Slush/LycheeSlush.png";
+import SlushMango from "../assets/Slush/MangoSlush.png";
+import SlushStarberry from "../assets/Slush/StrawberryMilkSlush.png";
+import SlushTaro from "../assets/Slush/TaroSlush.png";
+import SlushMatcha from "../assets/Slush/MatchaMilkSlush.png";
+import SlushCaramelChocolate from "../assets/Slush/CaramelChocolateSlush.png";
+
+import CoffeeMilk from "../assets/Coffee/MilkCoffee.png";
+import CoffeeMilkTea from "../assets/Coffee/CoffeeMilkTea.png";
+import CoffeeMilkFoamBlack from "../assets/Coffee/MilkFoamBlackCoffee.png";
+
+import TeaLatte from "../assets/Tea/ChaiTeaLatte.png";
+import TeaEarl from "../assets/Tea/EarlGreyTeaLatte.png";
+import TeaMatcha from "../assets/Tea/MatchaTeaLatte.png";
+import TeaStrawberry from "../assets/Tea/Strawberry-MatchaLatte.png";
+
+import CreativeCaramel from "../assets/Creative/CaramelChocolate.png";
+import CreativeHibiscus from "../assets/Creative/HibiscusGreenTea.png";
+import CreativeHoney from "../assets/Creative/HoneyGreenTea.png";
+import CreativeLemonAiYu from "../assets/Creative/LemonAiYuWhitePearl.png";
+import CreativeLemonWintermelon from "../assets/Creative/LemonWintermelonBasilSeeds.png";
+import CreativeYogurt from "../assets/Creative/LemonYogurt.png";
+import CreativeLychee from "../assets/Creative/LycheeOolongTea.png";
+import CreativeGreenTea from "../assets/Creative/StrawberryGreenTea.png";
+import CreativeTaro from "../assets/Creative/TaroMilkDrink.png";
+
+/**
+ * List of Milk Foam products with their details.
+ * @type {Array&lt;Object>}
+ */
+export const MilkFoamList = [
+  {
+    name: "Green Milk Foam",
+    image: MilkFoamGreen,
+    price: 5.50,
+    id: 1,
+  },
+  
+  {
+    name: "Black Milk Foam",
+    image: MilkFoamBlack,
+    price: 5.50,
+    id: 2,
+  },
+  {
+    name: "Oolong Milk Foam",
+    image: MilkFoamOolong,
+    price: 5.50,
+    id: 3,
+  },
+  {
+    name: "Earl Grey Milk Foam",
+    image: MilkFoamEarlGrey,
+    price: 5.50,
+    id: 4,
+  },
+  {
+    name: "Wintermelon Milk Foam",
+    image: MilkFoamWinterMelon,
+    price: 5.50,
+    id: 5
+  },
+  {
+    name: "Dirty Brown Sugar Milk Tea",
+    image: MilkFoamDirtyBrown,
+    price: 6.25,
+    id: 6
+  },
+  {
+    name: "Creme Brulee Brown Sugar Milk Tea",
+    image: MilkFoamCremeBruleeBrown,
+    price: 6.75,
+    id: 7
+  },
+  {
+    name: "Creme Brulee Strawberry Latte",
+    image: MilkFoamCremeBruleeStrawberry,
+    price: 6.75,
+    id: 8
+  },
+];
+
+export const MilkTeaList = [
+  {
+    name: "Green Milk Tea",
+    image: MilkTea,
+    price: 4.75,
+    id: 9
+  },
+  
+  {
+    name: "Black Milk Tea",
+    image: MilkTea,
+    price: 4.75,
+    id: 10
+  },
+  {
+    name: "Oolong Milk Tea",
+    image: MilkTea,
+    price: 4.75,
+    id: 11
+  },
+  {
+    name: "Earl Grey Milk Tea",
+    image: MilkTea,
+    price: 4.75,
+    id: 12
+  },
+  {
+    name: "Pearl Milk Tea",
+    image: MilkTeaPearl,
+    price: 5.50,
+    id: 13
+  },
+  {
+    name: "Caramel Milk Tea",
+    image: MilkTeaCaramel,
+    price: 5.25,
+    id: 14
+  },
+  {
+    name: "Brown Sugar Milk Tea",
+    image: MilkTeaBrownSugar,
+    price: 5.25,
+    id: 15
+  },
+  {
+    name: "Wintermelon Milk Tea",
+    image: MilkTeaWintermelon,
+    price: 5.25,
+    id: 16
+  },
+  {
+    name: "Strawberry Milk Tea",
+    image: MilkTeaStrawberry,
+    price: 5.50,
+    id: 17
+  },
+  
+
+];
+
+/**
+ * List of Slush products with their details.
+ * @type {Array&lt;Object>}
+ */
+export const SlushList = [
+  {
+    name: "Milk Foam Peach Slush W/ Star Jelly",
+    image: SlushPassionfruitandPeach,
+    price: 7.50,
+    id: 18
+  },
+  
+  {
+    name: "Lychee Slush",
+    image: SlushLychee,
+    price: 6.50,
+    id: 19
+  },
+  {
+    name: "Mango Milk Slush",
+    image: SlushMango,
+    price: 6.50,
+    id: 20
+  },
+  {
+    name: "Strawberry Milk Slush",
+    image: SlushStarberry,
+    price: 6.50,
+    id: 21
+  },
+  {
+    name: "Taro Milk Slush",
+    image: SlushTaro,
+    price: 6.50,
+    id: 22
+  },
+  {
+    name: "Matcha Milk Slush",
+    image: SlushMatcha,
+    price: 6.50,
+    id: 23
+  },
+  {
+    name: "Caramel Chocolate Slush",
+    image: SlushCaramelChocolate,
+    price: 6.50,
+    id: 24
+  },
+  {
+    name: "Passionfruit Yogurt Slush",
+    image: SlushPassionfruitandPeach,
+    price: 6.50,
+    id: 25
+  },
+  
+];
+
+/**
+ * List of Coffee products with their details.
+ * @type {Array&lt;Object>}
+ */
+export const CoffeeList = [
+  {
+    name: "Milk Coffee",
+    image: CoffeeMilk,
+    price: 5.25,
+    id: 26
+  },
+  
+  {
+    name: "Coffee Milk Tea",
+    image: CoffeeMilkTea,
+    price: 5.25,
+    id: 27
+  },
+  {
+    name: "Milk Foam Black Coffee",
+    image: CoffeeMilkFoamBlack,
+    price: 5.75,
+    id: 28
+  },
+];
+
+/**
+ * List of Tea products with their details.
+ * @type {Array&lt;Object>}
+ */
+export const TeaList = [
+  {
+    name: "Green Tea Latte",
+    image: TeaLatte,
+    price: 5.55,
+    id: 29
+  },
+  
+  {
+    name: "Black Tea Latte",
+    image: TeaLatte,
+    price: 5.50,
+    id: 30
+  },
+  {
+    name: "Oolong Tea Latte",
+    image: TeaLatte,
+    price: 5.50,
+    id: 31
+  },
+  {
+    name: "Earl Grey Tea Latte",
+    image: TeaEarl,
+    price: 5.50,
+    id: 32
+  },
+  {
+    name: "Matcha Tea Latte",
+    image: TeaMatcha,
+    price: 5.50,
+    id: 33
+  },
+  {
+    name: "Strawberry Matcha Latte",
+    image: TeaStrawberry,
+    price: 6.25,
+    id: 34
+  },
+];
+
+/**
+ * List of Creative products with their details.
+ * @type {Array&lt;Object>}
+ */
+export const CreativeList = [
+  {
+    name: "Grapefruit Green Tea",
+    image: CreativeGreenTea,
+    price: 5.25,
+    id: 35
+  },
+  
+  {
+    name: "Strawberry Green Tea",
+    image: CreativeGreenTea,
+    price: 5.25,
+    id: 36
+  },
+  {
+    name: "Mango Green Tea",
+    image: CreativeGreenTea,
+    price: 5.25,
+    id: 37
+  },
+  {
+    name: "Passionfruit Green Tea",
+    image: CreativeGreenTea,
+    price: 5.25,
+    id: 38
+  },
+  {
+    name: "Lemon Green Tea",
+    image: CreativeGreenTea,
+    price: 5.25,
+    id: 39
+  },
+  {
+    name: "Peach Green Tea",
+    image: CreativeGreenTea,
+    price: 5.25,
+    id: 40
+  },
+  {
+    name: "Hibiscus Green Tea",
+    image: CreativeHibiscus,
+    price: 5.25,
+    id: 41
+  },
+  {
+    name: "Honey Green Tea",
+    image: CreativeHoney,
+    price: 5.25,
+    id: 42
+  },
+  {
+    name: "Lychee Oolong",
+    image: CreativeLychee,
+    price: 5.25,
+    id: 43
+  },
+  {
+    name: "Lemon Ai-Yu White Pearl",
+    image: CreativeLemonAiYu,
+    price: 5.75,
+    id: 44
+  },
+  {
+    name: "Lemon Wintermelon Basil Seeds",
+    image: CreativeLemonWintermelon,
+    price: 5.75,
+    id: 45
+  },
+  {
+    name: "Taro",
+    image: CreativeTaro,
+    price: 5.50,
+    id: 46
+  },
+  {
+    name: "Caramel Chocolate",
+    image:CreativeCaramel,
+    price: 5.50,
+    id: 47
+  },
+  {
+    name: "Grapefruit Yogurt",
+    image: CreativeYogurt,
+    price: 6.00,
+    id: 48
+  },
+  {
+    name: "Strawberry Yogurt",
+    image: CreativeYogurt,
+    price: 6.00,
+    id: 49
+  },
+  {
+    name: "Mango Yogurt",
+    image: CreativeYogurt,
+    price: 6.00,
+    id: 50
+  },
+  {
+    name: "Passionfruit Yogurt",
+    image: CreativeYogurt,
+    price: 6.00,
+    id: 51
+  },
+  {
+    name: "Lemon Yogurt",
+    image: CreativeYogurt,
+    price: 6.00,
+    id: 52
+  },
+  {
+    name: "Peach Yogurt",
+    image: CreativeYogurt,
+    price: 6.00,
+    id: 53
+  },
+];</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

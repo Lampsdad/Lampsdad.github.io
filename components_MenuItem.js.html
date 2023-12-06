@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: components/MenuItem.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,42 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: components/MenuItem.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import { Link } from 'react-router-dom';
 
 
-    <h3> </h3>
+/**
+ * Functional component representing a menu item.
+ * Displays the image, name, and price of the menu item in a Link component.
+ *
+ * @param {string} image - The URL of the menu item's image.
+ * @param {string} name - The name of the menu item.
+ * @param {number} price - The price of the menu item.
+ * @param {number} id - The unique identifier of the menu item.
+ * @returns {JSX.Element} JSX for the MenuItem component.
+ */
+function MenuItem({ image, name, price, id}) {
+  return (
+    &lt;Link className='menuItem' to={{pathname:"/customization"}} state = {{name, price, id}}>
+        &lt;div style={{ backgroundImage: `url(${image})` }}> &lt;/div>
+        &lt;h1> {name} &lt;/h1>
+        &lt;p> ${price} &lt;/p>
+    &lt;/Link>
+  )
+}
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default MenuItem</code></pre>
+        </article>
+    </section>
 
 
 

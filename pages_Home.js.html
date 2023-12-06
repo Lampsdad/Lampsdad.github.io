@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Home.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Home.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { React, useState } from 'react'
+import BG from '../assets/bg.jpg';
+import Search from '../assets/Other/Search.png';
+import '../styles/Home.css';
+
+/**
+ * Home component displaying weather information and recommended drinks based on temperature.
+ * @returns {JSX.Element} Home component JSX
+ */
+function Home() {
+  const [city, setCity] = useState('College Station');
+  const [weatherInfo, setWeatherInfo] = useState(null);
+  const [recommendedDrink, setRecommendedDrink] = useState('');
+  /**
+   * Fetches weather information from the OpenWeatherMap API based on the entered city.
+   */
+  function getWeather() {
+    const apiKey = process.env.REACT_APP_WEATHER_TOKEN;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&amp;appid=${apiKey}&amp;units=metric`;
+		fetch(url)
+			.then((response) => response.json())
+			.then((data) => {
+				let MT = Math.round((data.main.temp * 1.8) + 32);
+				let FL = Math.round(data.main.feels_like);
+        let rec = '';
+				const weather = {
+					location: data.name,
+					temperature: `${MT} °F`,
+					humidity: `Humidity: ${data.main.humidity}%`,
+					wind: `Wind: ${data.wind.speed} km/h`,
+					condition: `Weather Condition: ${data.weather[0].description}`,
+				};
+        if (MT > 90){
+          rec = 'Cold Taro Milk Slush';
+        }
+        else if (MT > 60){
+          rec = 'Hot Green Milk Foam';
+        }
+        else {
+          rec = 'Hot Green Tea Latte';
+        }
+				setWeatherInfo(weather);
+        setRecommendedDrink(`Recommended Drink: ${rec}`);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+  }
+  return (
+    &lt;div className="home"
+        style={{ backgroundImage: `url(${BG})` }}
+    >
+        &lt;div className="weatherContainer">
+          &lt;div className="searchContainer">
+            &lt;input
+              type='text'
+              placeholder='Search'
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+            &lt;div onClick={()=>{getWeather()}}>
+              &lt;img alt="search image for weather api" src={Search} className="searchIcon">&lt;/img>
+            &lt;/div>
+          &lt;/div>
+          {weatherInfo &amp;&amp; (
+            &lt;div className='weatherInfo'>
+              &lt;div className='weatherLocation'>{weatherInfo.location}&lt;/div>
+              &lt;div className='weatherTemperature'>{weatherInfo.temperature}&lt;/div>
+              &lt;div className='weatherFeel'>{weatherInfo.feelsLike}&lt;/div>
+              &lt;div className='weatherHumidity'>{weatherInfo.humidity}&lt;/div>
+              &lt;div className='weatherWind'>{weatherInfo.wind}&lt;/div>
+              &lt;div className='weatherCondition'>{weatherInfo.condition}&lt;/div>
+              &lt;div className='weatherCondition'>{recommendedDrink}&lt;/div>
+            &lt;/div>
+          )}
+        &lt;/div>
+    &lt;/div>
+  )
+}
+
+export default Home</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

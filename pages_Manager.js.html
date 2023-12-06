@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Manager.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Manager.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useState} from 'react';
+import ManagerInventoryReport from '../components/ManagerInventoryReport';
+import ManagerSalesReport from '../components/ManagerSalesReport';
+import ManagerExcessReport from '../components/ManagerExcessReport';
+import ManagerRestockReport from '../components/ManagerRestockReport';
+import ManagerPairReport from '../components/ManagerPairReport';
+import '../styles/Manager.css';
+import ManagerAddMenuItem from '../components/ManagerAddMenuItem';
+
+/**
+ * Manager component to display various reports and functionalities.
+ * @returns {JSX.Element} Manager component JSX
+ */
+function Manager() 
+{
+  const [toggle, setToggle] = useState(1);
+
+  /**
+   * Updates the toggle state based on the selected tab.
+   * @param {number} id - ID of the tab to switch to
+   */
+  function updateToggle(id) {
+    setToggle(id);
+}
+
+return (
+  &lt;div className="reports">
+      &lt;h1 className="reportsTitle">Manager Reports&lt;/h1>
+      &lt;div className="container">
+          &lt;ul className="c-flex">
+            &lt;li className="tab" onClick={()=>updateToggle(1)}>Inventory&lt;/li>
+            &lt;li className="tab" onClick={()=>updateToggle(2)}>Sales Report&lt;/li>
+            &lt;li className="tab" onClick={()=>updateToggle(3)}>Excess Report&lt;/li>
+            &lt;li className="tab" onClick={()=>updateToggle(4)}>Restock Report&lt;/li>
+            &lt;li className="tab" onClick={()=>updateToggle(5)}>Sales Pair Report&lt;/li>
+            &lt;li className="tab" onClick={()=>updateToggle(6)}>Seasonal Items&lt;/li>
+          &lt;/ul>
+          &lt;div className={toggle === 1 ? "reportsList" : "hide-reportsList"}>     
+            &lt;ManagerInventoryReport>&lt;/ManagerInventoryReport>
+          &lt;/div>
+          &lt;div className={toggle === 2 ? "reportsList" : "hide-reportsList"}>
+              &lt;ManagerSalesReport>&lt;/ManagerSalesReport>
+          &lt;/div>
+          &lt;div className={toggle === 3 ? "reportsList" : "hide-reportsList"}>
+              &lt;ManagerExcessReport>&lt;/ManagerExcessReport>
+          &lt;/div>
+          &lt;div className={toggle === 4 ? "reportsList" : "hide-reportsList"}>
+              &lt;ManagerRestockReport>&lt;/ManagerRestockReport>
+          &lt;/div>
+          &lt;div className={toggle === 5 ? "reportsList" : "hide-reportsList"}>
+             &lt;ManagerPairReport>&lt;/ManagerPairReport>
+          &lt;/div>
+          &lt;div className={toggle === 6 ? "reportsList" : "hide-reportsList"}>
+             &lt;ManagerAddMenuItem>&lt;/ManagerAddMenuItem>
+          &lt;/div>
+      &lt;/div>
+  &lt;/div>
+)
+}
+export default Manager</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartContext">CartContext</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#Cashier">Cashier</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Checkout">Checkout</a></li><li><a href="global.html#CoffeeList">CoffeeList</a></li><li><a href="global.html#CreativeList">CreativeList</a></li><li><a href="global.html#Customization">Customization</a></li><li><a href="global.html#DynamicMenuList">DynamicMenuList</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Manager">Manager</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#MilkFoamList">MilkFoamList</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#SlushList">SlushList</a></li><li><a href="global.html#TeaList">TeaList</a></li><li><a href="global.html#Translate">Translate</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useCart">useCart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:04:54 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

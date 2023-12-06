@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: components/CashierItem.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,39 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: components/CashierItem.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import { Link } from 'react-router-dom';
 
+/**
+ * Functional component representing an item in the cashier.
+ * @param {Object} props - The properties passed to the CashierItem component.
+ * @param {string} props.image - The image URL for the item.
+ * @param {string} props.name - The name of the item.
+ * @param {number} props.price - The price of the item.
+ * @param {number} props.id - The ID of the item.
+ * @returns {JSX.Element} JSX for the CashierItem component.
+ */
+function CashierItem({ image, name, price, id}) {
+  return (
+    &lt;Link className='cashierItem' to={{pathname:"/customization"}} state = {{name, price, id}}>
+        &lt;h1> {name} &lt;/h1>
+        &lt;p> ${price} &lt;/p>
+    &lt;/Link>
+  )
+}
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default CashierItem</code></pre>
+        </article>
+    </section>
 
 
 

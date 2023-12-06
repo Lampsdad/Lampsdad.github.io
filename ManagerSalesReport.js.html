@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ManagerSalesReport.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ManagerSalesReport.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import DynamicMenuList from "../helpers/DynamicMenuList";
+
+
+/**
+ * Functional component for generating a sales report based on selected dates and a menu item.
+ * @returns {JSX.Element} JSX for the ManagerSalesReport component.
+ */
+function ManagerSalesReport(){
+
+    const [salesData, setSalesData] = useState([]);
+
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [item, setItem] = useState(1);
+
+    const menuList = DynamicMenuList();
+
+
+    /**
+   * Function to send a request for generating the sales report based on selected dates and a menu item.
+   * @param {Event} e - The click event triggering the report generation.
+   */
+    const sendRequest = async e =>{
+        try{
+            //month indexes from 0, need to add 1
+            const startMonth = startDate.getMonth() + 1;
+            const endMonth = endDate.getMonth() + 1;
+
+            const body = {"query": "SELECT s.* FROM sale s JOIN order_item oi ON oi.id = ANY(s.items) WHERE oi.menu_item_id = "+ item + 
+            "  AND s.date BETWEEN '"+ startMonth + "-" + startDate.getDate() +
+             "-" + startDate.getFullYear() + "' AND '" + endMonth + "-" + 
+             endDate.getDate() + "-" + endDate.getFullYear()+"';"}
+             
+            const response = await fetch("/query", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            setSalesData(jsonData);
+            }
+            catch (err){
+            console.error(err.message);
+            }
+    } 
+
+
+
+return (
+    &lt;div className = "ManagerSalesReport">
+        &lt;div className="StartDatePicker">
+            &lt;h4>Start Date&lt;/h4>
+             &lt;DatePicker className="customDatepicker" selected={startDate} onChange={(date) => setStartDate(date)} />
+        &lt;/div>
+
+        &lt;div className="EndDatePicker">
+             &lt;h4>End Date&lt;/h4>
+             &lt;DatePicker className="customDatepicker" selected={endDate} onChange={(date) => setEndDate(date)} />
+        &lt;/div>
+        &lt;div className="ItemPicker">
+            &lt;h4>Menu Item&lt;/h4>
+                &lt;select className="customSelect" value={item} onChange={e => setItem(e.target.value)}>
+                {menuList.map(data => (
+                    &lt;option value = {data.id}>{data.name}&lt;/option>
+                ))}
+                &lt;/select>
+        &lt;/div>
+        &lt;button className="customButton" type="button" onClick={sendRequest}>Generate Report&lt;/button>
+        {salesData.length > 0 &amp;&amp; (
+            &lt;table>
+                &lt;thead>
+                    &lt;tr>
+                        &lt;th>ID&lt;/th>
+                        &lt;th>Date&lt;/th>
+                        &lt;th>Items&lt;/th>
+                        &lt;th>Price&lt;/th>
+                    &lt;/tr>
+                &lt;/thead>
+                &lt;tbody>
+                    {salesData.map(data => (
+                        &lt;tr key={data.id}>
+                            &lt;td>{data.id + " | "}&lt;/td>
+                            &lt;td>{data.date.substr(0,10) + " | "}&lt;/td>
+                            &lt;td>{data.items.map(item => (item + ", "))}&lt;/td>
+                            &lt;td>{" | " + data.price}&lt;/td>
+                        &lt;/tr>
+                    ))}
+                &lt;/tbody>
+            &lt;/table>
+        )}
+    &lt;/div>
+    
+)
+
+}  
+
+export default ManagerSalesReport;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:00:27 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

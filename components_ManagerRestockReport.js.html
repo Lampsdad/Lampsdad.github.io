@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: components/ManagerRestockReport.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,72 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: components/ManagerRestockReport.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useEffect, useState } from "react";
 
 
-    <h3> </h3>
+/**
+ * Functional component for generating a restock report of inventory items with low quantity.
+ * @returns {JSX.Element} JSX for the ManagerRestockReport component.
+ */
+function ManagerRestockReport(){
 
+    const [restockData, setRestockData] = useState([]);
 
+    useEffect(() => {
+        async function sendRequest(){
+            try{
+                const body = {"query": "select * from inventory_item where quantity &lt; 2000 order by id;"}
+                const response = await fetch("/query", {
+                  method: "POST",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify(body)
+                });
+                const jsonData = await response.json();
+                setRestockData(jsonData);
+              }
+              catch (err){
+                console.error(err.message);
+              }
+        } 
+        sendRequest();
+    }, []);
 
+return (
+    &lt;table>
+        &lt;thead>
+        &lt;tr>
+            &lt;th>ID&lt;/th>
+            &lt;th>Name&lt;/th>
+            &lt;th>Quantity&lt;/th>
+        &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+        {restockData.map(data => (
+            &lt;tr>
+            &lt;td>{data.id + " | "}&lt;/td>
+            &lt;td>{data.name + " | "}&lt;/td>
+            &lt;td>{data.quantity}&lt;/td>
+            &lt;/tr>
+        ))}
+        &lt;/tbody>
+    &lt;/table>
+)
 
+}  
 
-
-
-
-
-
-    
-
-
-
-
-
+export default ManagerRestockReport;
+</code></pre>
+        </article>
+    </section>
 
 
 

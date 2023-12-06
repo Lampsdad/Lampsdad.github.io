@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: helpers/Guide.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,87 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: helpers/Guide.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react';
+import '../styles/Guide.css';
+
+/**
+ * Component to translate text content and title based on user-selected language.
+ * @returns {JSX.Element} Translation component UI.
+ */
+const Translate = () => {
+  const [text, setText] = useState("You can translate the content of this page by selecting a language in the select box.");
+  const [title, setTitle] = useState("My Web Page");
+  const [targetLanguage, setTargetLanguage] = useState("EN"); // Default to French
+
+  /**
+   * Handles translation of text content and title based on the selected language.
+   * Fetches translations from Google Translate API and updates state accordingly.
+   * @returns {void}
+   */
+  const handleTranslate = () => {
+    const url = "https://translation.googleapis.com/language/translate/v2";
+    const apiKey = process.env.REACT_APP_TRANSLATE_TOKEN;
+
+    const params = new URLSearchParams({
+      q: [text, title].join('\n'), // Separate text with a newline character
+      target: targetLanguage,
+      key: apiKey,
+    });
+
+    fetch(`${url}?${params}`)
+      .then(response => response.json())
+      .then(data => {
+        setText(data.data.translations[0].translatedText);
+        setTitle(data.data.translations[1].translatedText);
+      })
+      .catch(error => console.error('Translation error:', error));
+  };
 
 
-    <h3> </h3>
+  return (
+    &lt;div className="guideBox">
+      &lt;p id="textField">{text}&lt;/p>
+      &lt;h1 id="title">{title}&lt;/h1>
+      &lt;p>Hello everybody!&lt;/p>
+      &lt;p>Translate this page:&lt;/p>
+      &lt;form>
+        &lt;select
+          id="targetLanguage"
+          value={targetLanguage}
+          onChange={e => setTargetLanguage(e.target.value)}
+        >
+          &lt;option value="ZH">Chinese (Mandarin)&lt;/option>
+          &lt;option value="CS">Czech&lt;/option>
+          &lt;option value="DA">Danish&lt;/option>
+          &lt;option value="NL">Dutch&lt;/option>
+          &lt;option value="EN">English&lt;/option>
+          &lt;option value="ET">Estonian&lt;/option>
+          &lt;option value="FR">French&lt;/option>
+        &lt;/select>
 
+        &lt;input
+          type="button"
+          id="translateButton"
+          value="Translate"
+          onClick={handleTranslate}
+        />
+      &lt;/form>
+    &lt;/div>
+  );
+};
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default Translate;</code></pre>
+        </article>
+    </section>
 
 
 

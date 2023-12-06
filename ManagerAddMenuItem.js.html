@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ManagerAddMenuItem.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ManagerAddMenuItem.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from "react";
+
+/**
+ * Functional component to add a menu item.
+ * @returns {JSX.Element} JSX for the AddMenuItem component.
+ */
+function AddMenuItem() {
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [ingredients, setIngredients] = useState([]);
+    const [availableIngredients, setAvailableIngredients] = useState([]);
+    const [seasonalItems, setSeasonalItems] = useState([]);
+    const [deleteSuccessMessage, setDeleteSuccessMessage] = useState("");
+    const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
+    const [formSuccessMessage, setFormSuccessMessage] = useState("");
+    const [formErrorMessage, setFormErrorMessage] = useState("");
+
+  useEffect(() => {
+    // Fetch available ingredients from the database
+    async function fetchIngredients() {
+      try {
+        const body = {"query": "select * from inventory_item order by id;"}
+                const response = await fetch("/query", {
+                  method: "POST",
+                  headers: {"Content-Type": "application/json"},
+                  body: JSON.stringify(body)
+                });
+        const jsonData = await response.json();
+        setAvailableIngredients(jsonData);
+
+        const sbody = {"query": "select * from menu_item where id > 54;"}
+        const seasonalItemsResponse = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(sbody)
+        });
+        const seasonalItemsData = await seasonalItemsResponse.json();
+        setSeasonalItems(seasonalItemsData);
+    } catch (error) {
+        console.error("Error fetching ingredients:", error);
+      }
+    }
+    fetchIngredients();
+  }, []);
+
+  const handleIngredientChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setIngredients([...ingredients, value]);
+    } else {
+      const updatedIngredients = ingredients.filter(
+        (ingredient) => ingredient !== value
+      );
+      setIngredients(updatedIngredients);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+
+        const maxMenuIDBody = {"query": "SELECT MAX(id) FROM menu_item;"}
+        const maxMenuIDResponse = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(maxMenuIDBody)
+        });
+        var temp = await maxMenuIDResponse.json();
+        let maxMenuId = temp[0].max + 1;
+        console.log(maxMenuId);
+
+      const body = {
+        query: `INSERT INTO menu_item (id, name, price, ingredients) VALUES (${maxMenuId}, '${name}', ${price}, '{${ingredients.join(',')}}');`,
+      };
+      console.log(body);
+      const response = await fetch("/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        setFormSuccessMessage("Menu item added successfully!");
+        setName("");
+        setPrice("");
+        setIngredients([]);
+        setFormErrorMessage("");
+        setDeleteErrorMessage("");
+        setDeleteSuccessMessage("");
+
+
+        const sbody = {"query": "select * from menu_item where id > 54;"}
+        const seasonalItemsResponse = await fetch("/query", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(sbody)
+        });
+        const seasonalItemsData = await seasonalItemsResponse.json();
+        setSeasonalItems(seasonalItemsData);
+
+      } else {
+        setFormSuccessMessage("");
+        setFormErrorMessage("Failed to add the menu item. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding menu item:", error);
+      setFormErrorMessage("An error occurred. Please try again later.");
+    }
+  };
+
+
+  const handleRemoveItem = async (itemId) => {
+    try {
+      const body = {
+        query: `DELETE FROM menu_item WHERE id = ${itemId};`,
+      };
+
+      const response = await fetch("/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        setDeleteSuccessMessage("Menu item removed successfully!");
+        setDeleteErrorMessage("");
+        // Remove the item from the seasonalItems state
+        const updatedSeasonalItems = seasonalItems.filter(
+          (item) => item.id !== itemId
+        );
+        setSeasonalItems(updatedSeasonalItems);
+      } else {
+        setDeleteSuccessMessage("");
+        setDeleteErrorMessage("Failed to remove the menu item. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error removing menu item:", error);
+      setDeleteErrorMessage("An error occurred. Please try again later.");
+    }
+  };
+
+  return (
+    &lt;div>
+        &lt;div>
+        &lt;h2>Add Seasonal Item&lt;/h2>
+      &lt;form onSubmit={handleSubmit}>
+        &lt;div>
+          &lt;label htmlFor="name">Name:&lt;/label>
+          &lt;input
+            className="customInput"
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        &lt;/div>
+        &lt;div>
+          &lt;label htmlFor="price">Price:&lt;/label>
+          &lt;input
+            className="customInput"
+            type="number"
+            id="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+        &lt;/div>
+        &lt;div>
+          &lt;label>Ingredients:&lt;/label>
+          {availableIngredients.map((ingredient) => (
+            &lt;div key={ingredient.id}>
+              &lt;label>
+                &lt;input
+                  className="customCheckbox"
+                  type="checkbox"
+                  value={ingredient.id}
+                  onChange={handleIngredientChange}
+                />
+                {ingredient.name}
+              &lt;/label>
+            &lt;/div>
+          ))}
+        &lt;/div>
+        &lt;button className="customButton" type="submit">Add Item&lt;/button>
+      &lt;/form>
+      {formSuccessMessage &amp;&amp; &lt;p>{formSuccessMessage}&lt;/p>}
+      {formErrorMessage &amp;&amp; &lt;p>{formErrorMessage}&lt;/p>}
+        &lt;/div>
+        &lt;div>
+      {/* Your form for adding new menu items */}
+      {/* Display added menu items */}
+      {seasonalItems.length > 0 &amp;&amp; (
+        &lt;div>
+          &lt;h2>Seasonal Menu Items&lt;/h2>
+          &lt;ul>
+            {seasonalItems.map((item) => (
+              &lt;li key={item.id}>
+                {item.name} - ${item.price}{" "}
+                &lt;button className="customButton" onClick={() => handleRemoveItem(item.id)}>
+                  Remove
+                &lt;/button>
+              &lt;/li>
+            ))}
+          &lt;/ul>
+        &lt;/div>
+      )}
+      {deleteSuccessMessage &amp;&amp; &lt;p>{deleteSuccessMessage}&lt;/p>}
+      {deleteErrorMessage &amp;&amp; &lt;p>{deleteErrorMessage}&lt;/p>}
+    &lt;/div>
+    &lt;/div>
+  );
+
+}
+
+export default AddMenuItem;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AddMenuItem">AddMenuItem</a></li><li><a href="global.html#CashierItem">CashierItem</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerExcessReport">ManagerExcessReport</a></li><li><a href="global.html#ManagerInventoryReport">ManagerInventoryReport</a></li><li><a href="global.html#ManagerPairReport">ManagerPairReport</a></li><li><a href="global.html#ManagerRestockReport">ManagerRestockReport</a></li><li><a href="global.html#ManagerSalesReport">ManagerSalesReport</a></li><li><a href="global.html#MenuItem">MenuItem</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 20:00:27 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
