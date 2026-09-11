@@ -104,6 +104,22 @@ button:focus-visible {
   border-bottom: 1px solid var(--rule);
 }
 
+.masthead .wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0 3rem;
+}
+
+.portrait {
+  width: 9.5rem;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  display: block;
+}
+
 .eyebrow {
   font-family: var(--mono);
   font-size: .72rem;
@@ -510,6 +526,12 @@ footer.site a { color: var(--faint); }
   margin: 2.5rem 0 1rem;
 }
 .prose h2:first-child { margin-top: 0; }
+
+/* Portrait moves above the text before the two columns get cramped. */
+@media (max-width: 44rem) {
+  .masthead .wrap { grid-template-columns: 1fr; gap: 0; }
+  .portrait { width: 7rem; margin-bottom: 1.5rem; order: -1; }
+}
 
 @media (max-width: 34rem) {
   .masthead { padding-block: 3rem 2rem; }
